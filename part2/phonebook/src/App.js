@@ -48,11 +48,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter filterValue={filterValue} handleNewFilter={handleNewFilter}/>
+      <Filter filterValue={filterValue} handleNewFilter={handleNewFilter} />
       <h3>Add a new</h3>
-      <PersonForm newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} addNumber={addNumber}/>
+      <PersonForm newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} addNumber={addNumber} />
       <h3>Numbers</h3>
-      <Persons personsToShow={personsToShow}/>
+      <Persons personsToShow={personsToShow} />
     </div>
   )
 }
