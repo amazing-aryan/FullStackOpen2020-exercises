@@ -10,18 +10,39 @@ const SearchForm = (props) => {
   </div>)
 }
 
-const CountriesToShow = ({ filteredCountries }) => {
-  if (filteredCountries.length > 10) {
+const Button = ({ handleClick, text }) => {
+  return (
+    <button onClick={handleClick}>{text}</button>
+  )
+}
+
+const CountriesToShow = ({ filterValue, filteredCountries, setFilter }) => {
+  if (filterValue === "")
+    return (<div>Start typing to find about a country ...</div>)
+  else if (filteredCountries.length === 0)
+    return (<div>No country found</div>)
+  else if (filteredCountries.length > 10) {
     return (<div>Too many matches, specify another filter</div>)
   } else if (filteredCountries.length > 1) {
-    return (<div><Countries countriesToShow={filteredCountries} /></div>)
+    return (<div><Countries countriesToShow={filteredCountries} setFilter={setFilter} /></div>)
   } else {
     return (<div><CountryDetails filteredCountry={filteredCountries} /></div>)
   }
 }
 
-const Countries = (props) => {
-  return (<div>{props.countriesToShow.map(country => <div key={country.name}>{country.name}</div>)}</div>)
+const Countries = ({ countriesToShow, setFilter }) => {
+  return (
+    <div>
+      {countriesToShow.map
+        (country => {
+          return (<div key={country.name}>
+            {country.name}
+            <Button handleClick={() => setFilter(country.name)} text={'show'} />
+          </div>
+          )
+        })
+      }
+    </div>)
 }
 
 const CountryDetails = ({ filteredCountry }) => {
@@ -77,7 +98,7 @@ const App = () => {
         <SearchForm filterValue={filterValue} handleFilter={handleFilter} />
       </div>
       <div>
-        <CountriesToShow filteredCountries={filteredCountries} />
+        <CountriesToShow filterValue={filterValue} filteredCountries={filteredCountries} setFilter={setFilterValue} />
       </div>
     </div>
   )
