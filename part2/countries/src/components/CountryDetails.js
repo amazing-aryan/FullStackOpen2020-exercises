@@ -1,5 +1,6 @@
 import React from 'react'
 import Languages from './Languages'
+import Weather from './Weather'
 
 const CountryDetails = ({ filteredCountry }) => {
     const name = filteredCountry.map(country => country.name)
@@ -7,6 +8,7 @@ const CountryDetails = ({ filteredCountry }) => {
     const population = filteredCountry.map(country => country.population)
     const languages = filteredCountry.map(country => country.languages)
     const flag = filteredCountry.map(country => country.flag)
+
     return (
         <div>
             <h1>{name}</h1>
@@ -18,6 +20,9 @@ const CountryDetails = ({ filteredCountry }) => {
             </div>
             <div>
                 <img height={120} width={180} src={flag} alt={name} />
+            </div>
+            <div>
+                <Weather capital={capital} />
             </div>
         </div>
     )
