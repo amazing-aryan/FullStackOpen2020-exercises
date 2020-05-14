@@ -61,7 +61,16 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
         })
     } else {
-      window.alert(`${newName} is already added to phonebook`)
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const sid = persons.filter(person => person.name === newName).map(person => person.id).toString()
+        const id = Number(sid)
+        phonebookService
+          .update(id, contactObject)
+          .then(returnedPerson => {
+            const newPersons = persons.filter(person => person.id !== id).concat(returnedPerson)
+            setPersons(newPersons)
+          })
+      }
     }
     setNewName('')
     setNewNumber('')
