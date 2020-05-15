@@ -1,36 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import phonebookService from './services/phonebook'
+import Notification from './components/Notification'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const Filter = (props) => <div> filter shown with <input value={props.filterValue} onChange={props.handleNewFilter} /> </div>
-
-const PersonForm = (props) => {
-  return (
-    <div>
-      <form>
-        <div>name: <input value={props.newName} onChange={props.handleNameChange} /></div>
-        <div>number: <input value={props.newNumber} onChange={props.handleNumberChange} /></div>
-        <div><button type="submit" onClick={props.addNumber}>add</button></div>
-      </form>
-    </div>
-  )
-}
-
-const Persons = (props) => <div>{props.personsToShow.map(person => {
-  return (
-    <div key={person.name}>
-      {person.name} {person.number}
-      <button onClick={() => props.handleClick(person.id, person.name)}>Delete</button>
-    </div>
-  )
-}
-)}
-</div>
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterValue, setFilterValue] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [status, setStatus] = useState(true)
 
   useEffect(() => {
     phonebookService
@@ -59,9 +41,13 @@ const App = () => {
         .create(contactObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
+          const msg = `Added ${newName}`
+          setStatus(true)
+          setErrorMessage(msg)
+          setTimeout(() => setErrorMessage(null), 5000)
         })
     } else {
-      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const sid = persons.filter(person => person.name === newName).map(person => person.id).toString()
         const id = Number(sid)
         phonebookService
@@ -69,6 +55,16 @@ const App = () => {
           .then(returnedPerson => {
             const newPersons = persons.filter(person => person.id !== id).concat(returnedPerson)
             setPersons(newPersons)
+            const msg = `Changed ${newName}'s number`
+            setStatus(true)
+            setErrorMessage(msg)
+            setTimeout(() => setErrorMessage(null), 5000)
+          })
+          .catch(() => {
+          const msg = `Informationn of ${newName} is already removed from the server`
+          setStatus(false)
+          setErrorMessage(msg)
+          setTimeout(() => setErrorMessage(null), 5000)
           })
       }
     }
@@ -83,12 +79,17 @@ const App = () => {
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
         })
+      const msg = `Deleted ${name}`
+      setStatus(true)
+      setErrorMessage(msg)
+      setTimeout(() => setErrorMessage(null), 5000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} status={status} />
       <Filter filterValue={filterValue} handleNewFilter={handleNewFilter} />
       <h3>Add a new</h3>
       <PersonForm newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} addNumber={addNumber} />
