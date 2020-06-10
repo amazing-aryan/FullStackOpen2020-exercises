@@ -49,7 +49,7 @@ const App = () => {
     } else {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const sid = persons.filter(person => person.name === newName).map(person => person.id).toString()
-        const id = Number(sid)
+        const id = sid
         phonebookService
           .update(id, contactObject)
           .then(returnedPerson => {
