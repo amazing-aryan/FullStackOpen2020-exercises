@@ -61,7 +61,7 @@ const App = () => {
             setTimeout(() => setErrorMessage(null), 5000)
           })
           .catch(() => {
-          const msg = `Informationn of ${newName} is already removed from the server`
+          const msg = `Information of ${newName} is already removed from the server`
           setStatus(false)
           setErrorMessage(msg)
           setTimeout(() => setErrorMessage(null), 5000)
