@@ -46,6 +46,11 @@ const App = () => {
           setErrorMessage(msg)
           setTimeout(() => setErrorMessage(null), 5000)
         })
+        .catch(error => {
+          setStatus(false)
+          setErrorMessage(error.response.data)
+          setTimeout(() => setErrorMessage(null), 5000)
+        })
     } else {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const sid = persons.filter(person => person.name === newName).map(person => person.id).toString()
@@ -60,10 +65,9 @@ const App = () => {
             setErrorMessage(msg)
             setTimeout(() => setErrorMessage(null), 5000)
           })
-          .catch(() => {
-          const msg = `Information of ${newName} is already removed from the server`
+          .catch(error => {
           setStatus(false)
-          setErrorMessage(msg)
+          setErrorMessage(error.response.data)
           setTimeout(() => setErrorMessage(null), 5000)
           })
       }
