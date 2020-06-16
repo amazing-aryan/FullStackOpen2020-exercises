@@ -30,6 +30,12 @@ const App = () => {
 
   const handleNumberChange = (event) => setNewNumber(event.target.value)
 
+  const handleNotification = (status, msg) => {
+    setStatus(status)
+    setErrorMessage(msg)
+    setTimeout(() => setErrorMessage(null), 5000)
+  }
+
   const addNumber = (event) => {
     event.preventDefault()
     const contactObject = {
@@ -42,14 +48,10 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           const msg = `Added ${newName}`
-          setStatus(true)
-          setErrorMessage(msg)
-          setTimeout(() => setErrorMessage(null), 5000)
+          handleNotification(true, msg)
         })
         .catch(error => {
-          setStatus(false)
-          setErrorMessage(error.response.data)
-          setTimeout(() => setErrorMessage(null), 5000)
+          handleNotification(false, error.response.data.error)
         })
     } else {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
@@ -61,14 +63,10 @@ const App = () => {
             const newPersons = persons.filter(person => person.id !== id).concat(returnedPerson)
             setPersons(newPersons)
             const msg = `Changed ${newName}'s number`
-            setStatus(true)
-            setErrorMessage(msg)
-            setTimeout(() => setErrorMessage(null), 5000)
+            handleNotification(true, msg)
           })
           .catch(error => {
-          setStatus(false)
-          setErrorMessage(error.response.data)
-          setTimeout(() => setErrorMessage(null), 5000)
+            handleNotification(false, error.response.data.error)
           })
       }
     }
@@ -84,9 +82,7 @@ const App = () => {
           setPersons(persons.filter(person => person.id !== id))
         })
       const msg = `Deleted ${name}`
-      setStatus(true)
-      setErrorMessage(msg)
-      setTimeout(() => setErrorMessage(null), 5000)
+      handleNotification(true, msg)
     }
   }
 
